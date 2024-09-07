@@ -1,4 +1,4 @@
-# Treinamentos HSF para Física de Altas Energias
+# HSF Training para Física de Altas Energias
 
 Repositório do **Treinamentos HSF**! Este repositório contém materiais e recursos para os cursos de treinamento em Física de Altas Energias oferecidos pela [HEP Software Foundation (HSF)](https://hepsoftwarefoundation.org/workinggroups/training.html). A HSF oferece sessões de treinamento voltadas para físicos e desenvolvedores de software que trabalham em experimentos de Física de Altas Energias, com foco em desenvolvimento de software, análise de dados e técnicas computacionais essenciais para a pesquisa moderna em HEP.
 
