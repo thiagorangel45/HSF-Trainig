@@ -18,4 +18,4 @@ As sessões de treinamento da HSF cobrem uma ampla gama de tópicos essenciais p
 Este repositório é organizado por módulos, cada um contendo material didático, exemplos de código e tarefas práticas. Para começar, basta clonar este repositório e navegar pelos diretórios correspondentes aos cursos de interesse:
 
 ```bash
-git clone https://github.com/thiagorangel45/repo-hsf-training.git
+git clone git@github.com:thiagorangel45/HSF-Training.git
