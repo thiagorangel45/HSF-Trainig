@@ -12,3 +12,4 @@ As sessões de treinamento da HSF cobrem uma ampla gama de tópicos essenciais p
 - **Machine Learning**: Introdução ao aprendizado de máquina aplicado a dados de experimentos de física.
 - **Git e GitHub**: Controle de versão e colaboração em projetos de software.
 - **Introdução ao Docker**: Criação e uso de containers no desenvolvimento de software científico.
+- **Uproot**: Análise de dados utilizando a biblioteca Uproot, acesse pelo link: [Uproot](https://masonproffitt.github.io/uproot-tutorial/).
