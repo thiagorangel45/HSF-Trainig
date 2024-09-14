@@ -1,0 +1,69 @@
+import numpy as np
+import ROOT
+from ROOT import TMVA
+from roc_class import ROCCurve
+
+# you should have this function somewhere
+from fwXmachina.Xconfig.utilities.rootOperations import branch_to_array
+
+
+# fetching input files and trees
+input_file = ROOT.TFile('moons.root', 'READ')
+signal_tree = input_file.Get('signal')
+background_tree = input_file.Get('background')
+
+# output file to store information
+output_file = ROOT.TFile('EfficiencyExample.root', "RECREATE")
+
+#create TMVA factory for training 
+factory = ROOT.TMVA.Factory('TMVAClassification', output_file)
+
+#dataloader with input data
+dataloader = ROOT.TMVA.DataLoader('dataset')
+dataloader.AddVariable('x', 'F')
+dataloader.AddVariable('y', 'F')
+dataloader.AddSignalTree(signal_tree)
+dataloader.AddBackgroundTree(background_tree)
+cut = ROOT.TCut('')
+
+#preparing the dataset
+dataloader.PrepareTrainingAndTestTree(cut, 'SplitMode=Random:NormMode=NumEvents')
+
+#BDT training
+factory.BookMethod(dataloader, ROOT.TMVA.Types.kBDT, 'BDT', 'nTrees=100:maxDepth=4:BoostType=AdaBoost')
+
+#Train and Test
+factory.TrainAllMethods()
+factory.TestAllMethods()
+factory.EvaluateAllMethods()
+output_file.Close()
+
+# get root output file
+f = ROOT.TFile("EfficiencyExample.root", "READ")
+t = f.Get("dataset/TestTree")
+
+# get branches as array
+x_vals = branch_to_array(t, 'x')
+y_vals = branch_to_array(t, 'y')
+bdt_scores = branch_to_array(t, 'BDT')
+# for some reason TMVA lets 0 = sig, 1 = bkg
+# so we call np.invert to switch that
+truth_tags = np.invert(branch_to_array(t, 'classID').astype(bool))
+
+#creating TEfficiency Curve
+eff = ROOT.TEfficiency("eff", "eff", 40, -5, 5)
+
+#creating a ROCCurve
+roc_curve = ROCCurve(mva_targets=truth_tags, scores=bdt_scores)
+
+# getting the threshold at 30% background acceptance
+threshold = roc_curve.get_mva_score_at_bkg_acc(0.3)
+
+#fill TEfficiency with pass value and x value at each point
+for x, score in zip(x_vals, bdt_scores):
+    eff.Fill(bool(score > threshold),
+             x)
+
+c = ROOT.TCanvas()
+eff.Draw()
+c.SaveAs("TMVAeff.png")
